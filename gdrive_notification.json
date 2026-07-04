@@ -1,0 +1,289 @@
+{
+  "name": "gdrive_notification",
+  "nodes": [
+    {
+      "parameters": {
+        "content": ""
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1232,
+        -368
+      ],
+      "typeVersion": 1,
+      "id": "21015f9f-df17-4113-936a-d03574cbcee3",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1m0Z8h6UUVzdqgnWD3WuYDAhKkgU9_5y1",
+          "mode": "list",
+          "cachedResultName": "n8n-projects",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1m0Z8h6UUVzdqgnWD3WuYDAhKkgU9_5y1"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1184,
+        -352
+      ],
+      "id": "0ce7e4a9-cc2a-4fec-a075-afe32ae290ba",
+      "name": "Google Drive Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "6gl5ZLrUSri666g0",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": ""
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -912,
+        -368
+      ],
+      "typeVersion": 1,
+      "id": "790bb694-02f8-4c0b-ad59-0ac02735d2bf",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -848,
+        -352
+      ],
+      "id": "1da2016f-e545-4e4b-b1e2-c5ab9922ded9",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "6gl5ZLrUSri666g0",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -112,
+        -352
+      ],
+      "id": "31a68a31-d04b-4c09-8991-5bfe9520dcfa",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "content": ""
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -176,
+        -368
+      ],
+      "typeVersion": 1,
+      "id": "66568608-bcc7-48d4-b674-f67566e7dccb",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": ""
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        160,
+        -368
+      ],
+      "typeVersion": 1,
+      "id": "13500637-1f07-4dec-b4a4-85dc79e95f8e",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "chatId": "6714252225",
+        "text": "={{ $json.text }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        224,
+        -352
+      ],
+      "id": "bbcf96a7-224f-49e1-b1e7-7d541d076b61",
+      "name": "Send a text message",
+      "webhookId": "998c6ec2-822e-4e88-9c86-4c9329231689",
+      "credentials": {
+        "telegramApi": {
+          "id": "nCeh8bmlMQadXUWo",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "0e099edf-255d-47cd-9866-f273b4b7d30e",
+              "leftValue": "={{ $json.fullFileExtension }}",
+              "rightValue": "pdf",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -512,
+        -336
+      ],
+      "id": "fb106ed2-2475-407d-8989-76c3f4630be9",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "content": ""
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -176,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "ec03a626-7794-4209-bd78-d031b234bdd2",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "chatId": "6714252225",
+        "text": "=A new non-pdf file is created",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -112,
+        -144
+      ],
+      "id": "dc55386a-da4f-4b02-bb31-787a42cd7c3d",
+      "name": "Send a text message1",
+      "webhookId": "998c6ec2-822e-4e88-9c86-4c9329231689",
+      "credentials": {
+        "telegramApi": {
+          "id": "nCeh8bmlMQadXUWo",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "06888e09-06d0-4e8d-a23c-a68c42a36832",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c07ab3bfb9285fd7cc4ccb41453a2c5839801d82ac441cc5ad23dc228b06bb81"
+  },
+  "nodeGroups": [],
+  "id": "Ym14n6cauAyO5ypS",
+  "tags": []
+}

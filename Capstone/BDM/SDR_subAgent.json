@@ -1,0 +1,168 @@
+{
+  "name": "SDR_subAgent",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an SDR. You use your tool to read all the person records in Pipedrive CRM system; for each Person, use your tool to create a draft email from Vinay Kumar K V (AI Engineer at VATSA) to pitch Vatsa's Innovative software products. The email should be professionally formatted in HTML. Explain in the email that if people are interested, they should call 7424567585 to speak with our AI agent and schedule a demo.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        288,
+        0
+      ],
+      "id": "3c9d475a-2223-4802-9b79-0b87014d2db8",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "gpt-chat-latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        224,
+        224
+      ],
+      "id": "99bc25ca-7e5a-4655-aa86-2bf59c10cec6",
+      "name": "Azure OpenAI Chat Model",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "O8yVSHl9J1uUaidW",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "person",
+        "operation": "getAll",
+        "returnAll": true,
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.pipedriveTool",
+      "typeVersion": 2,
+      "position": [
+        352,
+        224
+      ],
+      "id": "b5e78bae-bdaa-496a-88d9-3e72db98bc2f",
+      "name": "Get many persons in Pipedrive",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "HHQV2CHFWqQ4rcZT",
+          "name": "Pipedrive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "html",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To_Email', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        224
+      ],
+      "id": "109cdd1d-1703-49f0-a013-f5116bb9ec58",
+      "name": "Create a draft in Gmail",
+      "webhookId": "f7b5dc86-c0b8-4d20-a639-69e2536c7217",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "iWAI7nKTKx4BPt7l",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "query"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        96,
+        0
+      ],
+      "id": "05cde011-3d2a-4c4f-944c-2db29f23613b",
+      "name": "When Executed by Another Workflow"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Azure OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many persons in Pipedrive": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a draft in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "f8f47e6d-a9f9-406c-ad15-aafdfb9b65d9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c07ab3bfb9285fd7cc4ccb41453a2c5839801d82ac441cc5ad23dc228b06bb81"
+  },
+  "nodeGroups": [],
+  "id": "CaEOiDlSMx4WYkWU",
+  "tags": []
+}

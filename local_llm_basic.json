@@ -1,0 +1,146 @@
+{
+  "name": "local_llm_basic",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -416,
+        -128
+      ],
+      "id": "ec75ae2b-4f6a-4358-8756-50132f62017f",
+      "name": "When chat message received",
+      "webhookId": "128481ad-88aa-485f-9b1a-43a61c9977ff"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -128,
+        -128
+      ],
+      "id": "7d14215f-1b85-479e-a406-e33ffe2ba58a",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "qcwind/qwen3-8b-instruct-Q4-K-M:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        96
+      ],
+      "id": "f3d3e2f7-00fe-4e84-8246-8024a1ac5c5d",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "029FFfIZ60IZfnLz",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -64,
+        96
+      ],
+      "id": "e583a0ef-c02c-46d5-88d7-2e12511a722c",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "symbols": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Ticker', ``, 'string') }}",
+        "filters": {
+          "latest": true
+        }
+      },
+      "type": "n8n-nodes-base.marketstackTool",
+      "typeVersion": 1,
+      "position": [
+        64,
+        96
+      ],
+      "id": "39f9bd12-9d51-4944-ad2e-6d0d1b02aaa2",
+      "name": "Get many EoD data in Marketstack",
+      "credentials": {
+        "marketstackApi": {
+          "id": "ONu7wMHCGoD5e9nM",
+          "name": "Marketstack account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many EoD data in Marketstack": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "0b489d77-8edb-46a5-a6d2-d7de60b0d5f6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c07ab3bfb9285fd7cc4ccb41453a2c5839801d82ac441cc5ad23dc228b06bb81"
+  },
+  "nodeGroups": [],
+  "id": "MEpeScHlnHx7SvVI",
+  "tags": []
+}

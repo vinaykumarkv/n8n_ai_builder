@@ -1,0 +1,182 @@
+{
+  "name": "Prospecting_subAgent",
+  "nodes": [
+    {
+      "parameters": {
+        "endpointUrl": "https://mcp.firecrawl.dev/fc-bc38edb3468543229a1807d53fe9518e/v2/mcp",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.3,
+      "position": [
+        272,
+        224
+      ],
+      "id": "3a0f7b55-d2d0-4090-b10c-afcb9469ac01",
+      "name": "MCP Client"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You find Sales Prospects based on a specific query from the user. You use your tools to search the internet and scrape websites as necessary to find the best potential clients for the user, and also use your tools to find the most likely email address for the prospect, and respond with 2 sales prospects. Do not ask questions or clarifications. Answer only with the final answer after using your tools.",
+          "maxIterations": 30
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        272,
+        0
+      ],
+      "id": "9cd4ffbc-e3a6-4adf-a821-b67c621df821",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "gpt-chat-latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        144,
+        224
+      ],
+      "id": "00dcd2e7-1dc1-437d-8675-a15fdf5c63ea",
+      "name": "Azure OpenAI Chat Model",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "O8yVSHl9J1uUaidW",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n    \"prospects\": [\n      {\n        \"first_name\": \"string - Prospect's first name\",\n        \"last_name\": \"string - Prospect's last name\",\n        \"email\": \"string - Valid business email address\",\n        \"company\": \"string - Current employer/company name\",\n        \"role\": \"string - Current job title\",\n        \"rationale\": \"string - Brief explanation (1-3 sentences) describing why this prospect was selected and why they are a good fit\"\n      }\n    ]\n  }"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        528,
+        224
+      ],
+      "id": "9f6c35a2-a23b-4d01-b8c5-9ace6ba83962",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://mcp.hunter.io/mcp",
+        "authentication": "bearerAuth",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        224
+      ],
+      "id": "cba994db-fa86-484c-b34a-23431cd04bec",
+      "name": "MCP Client1",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "SNIcAEYV6UeFXMLr",
+          "name": "Bearer Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "query"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2dd7a863-a60d-40e3-b8b2-63852032cf78",
+      "name": "When Executed by Another Workflow"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "f8f09da5-fbca-4528-be81-2d911f7e516f",
+  "meta": {
+    "instanceId": "c07ab3bfb9285fd7cc4ccb41453a2c5839801d82ac441cc5ad23dc228b06bb81"
+  },
+  "nodeGroups": [],
+  "id": "sd2eugvp2RoTHqUf",
+  "tags": []
+}
